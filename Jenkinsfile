@@ -8,24 +8,8 @@ pipeline {
   }
   stages {
     stage('Build') {
-      parallel {
-        stage('Build') {
-          steps {
-            sh ' npm install'
-          }
-        }
-        stage('build') {
-          agent {
-            docker {
-              image 'node:6-alpine'
-              args '-p 3000:3000'
-            }
-
-          }
-          steps {
-            sh ' npm install'
-          }
-        }
+      steps {
+        sh ' npm install'
       }
     }
     stage('Test') {
@@ -34,10 +18,19 @@ pipeline {
       }
     }
     stage('deliver') {
-      steps {
-        sh ' ./jenkins/scripts/deliver.sh'
-        input '"Proceed" to continue'
-        sh './jenkins/scripts/kill.sh'
+      parallel {
+        stage('deliver') {
+          steps {
+            sh ' ./jenkins/scripts/deliver.sh'
+            input '"Proceed" to continue'
+            sh './jenkins/scripts/kill.sh'
+          }
+        }
+        stage('Deploy') {
+          steps {
+            sh 'npn install'
+          }
+        }
       }
     }
   }
