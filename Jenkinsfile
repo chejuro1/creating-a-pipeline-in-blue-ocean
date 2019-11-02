@@ -14,9 +14,16 @@ pipeline {
             sh ' npm install'
           }
         }
-        stage('Deploy') {
+        stage('build') {
+          agent {
+            docker {
+              image 'node:6-alpine'
+              args '-p 3000:3000'
+            }
+
+          }
           steps {
-            sh 'npn install'
+            sh ' npm install'
           }
         }
       }
