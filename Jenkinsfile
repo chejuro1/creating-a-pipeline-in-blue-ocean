@@ -8,8 +8,17 @@ pipeline {
   }
   stages {
     stage('Build') {
-      steps {
-        sh ' npm install'
+      parallel {
+        stage('Build') {
+          steps {
+            sh ' npm install'
+          }
+        }
+        stage('Deploy') {
+          steps {
+            sh 'npn install'
+          }
+        }
       }
     }
     stage('Test') {
